@@ -11,16 +11,20 @@ import {
   Box,
   Spinner,
   AspectRatio,
+  IconButton
 } from '@chakra-ui/react';
 import Breadcrumbs from './Breadcrumbs';
 import Error from './Error';
 import { useSeatGeek } from '../utils/useSeatGeek';
+import useFavorites from '../utils/useFavorites';
+import { StarIcon } from '@chakra-ui/icons';
 
 interface StatsProps {
   venue: {
     city: string;
     country: string;
     capacity: number;
+    id: string; // Add id property to venue interface
   }
 }
 
@@ -34,6 +38,7 @@ interface MapProps {
 const Venue: React.FC = () => {
   const { venueId } = useParams();
   const { data: venue, error } = useSeatGeek(`venues/${venueId}`);
+  const { favorites, toggleFavorite } = useFavorites(); // Add toggleFavorite
 
   if (error) return <Error />;
 
@@ -45,6 +50,8 @@ const Venue: React.FC = () => {
     )
   }
 
+  const isFavorite = favorites.some(fav => fav.id === venue.id);
+
   return (
     <>
       <Breadcrumbs
@@ -54,8 +61,16 @@ const Venue: React.FC = () => {
           { label: venue.name },
         ]} 
       />
-      <Flex bgColor="gray.200" p={[4, 6]}>
+      <Flex bgColor="gray.200" p={[4, 6]} alignItems="center" justifyContent="space-between">
         <Heading>{venue.name}</Heading>
+        <IconButton
+          icon={<StarIcon />}
+          aria-label="Add to favorites"
+          onClick={() => toggleFavorite(venue)} // Call toggleFavorite with venue
+          colorScheme={isFavorite ? 'yellow' : 'gray'}
+          size="sm"
+          ml={2}
+        />
       </Flex>
       <Stats venue={venue} />
       <Map location={venue.location} />
