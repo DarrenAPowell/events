@@ -12,12 +12,14 @@ import {
   Spinner,
   Button,
   Stack,
+  Tooltip
 } from '@chakra-ui/react';
 import Breadcrumbs from './Breadcrumbs';
 import Error from './Error';
 import { useSeatGeek } from '../utils/useSeatGeek';
 import { formatDateTime } from '../utils/formatDateTime';
 import { type Venue } from './Events';
+import { InfoIcon, StarIcon } from '@chakra-ui/icons';
 
 interface EventInfoProps {
   event: {
@@ -78,7 +80,12 @@ const EventInfo: React.FC<EventInfoProps> = ({ event }) => (
         <StatLabel display="flex">
           <Box as="span">Date</Box>
         </StatLabel>
-        <StatNumber fontSize="xl">{formatDateTime(event.datetime_utc)}</StatNumber>
+        <Tooltip placement="bottom" label={formatDateTime(event.datetime_utc)} aria-label="User timezone datetime">
+            <Flex alignItems="center" cursor="pointer">
+              <StatNumber fontSize="xl">{formatDateTime(event.datetime_local)}</StatNumber>
+              <InfoIcon ml={2} />
+            </Flex>
+          </Tooltip>
       </Stat>
     </SimpleGrid>
     <Flex>
