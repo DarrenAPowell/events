@@ -1,9 +1,11 @@
 import React from 'react';
-import { SimpleGrid, Flex, Spinner, Heading, Text, Box, Badge, LinkBox, LinkOverlay } from '@chakra-ui/react';
+import { SimpleGrid, Flex, Spinner, Heading, Text, Box, Badge, LinkBox, LinkOverlay, IconButton } from '@chakra-ui/react';
 import { Link as BrowserLink } from 'react-router-dom';
 import { useSeatGeek } from '../utils/useSeatGeek';
 import Error from './Error';
 import Breadcrumbs from './Breadcrumbs';
+import useFavorites from '../utils/useFavorites';
+import { StarIcon } from '@chakra-ui/icons';
 
 export interface VenueProps {
   id: number;
@@ -13,7 +15,7 @@ export interface VenueProps {
   display_location: string;
 }
 
-interface VenuItemProps {
+interface VenueItemProps {
   venue: VenueProps;
 }
 
@@ -22,6 +24,7 @@ const Venues: React.FC = () => {
     sort: 'score.desc',
     per_page: '24',
   });
+  const { favorites, toggleFavorite } = useFavorites();
 
   if (error) return <Error />;
 
@@ -38,14 +41,14 @@ const Venues: React.FC = () => {
       <Breadcrumbs items={[{ label: 'Home', to: '/' }, { label: 'Venues' }]} />
       <SimpleGrid spacing="6" m="6" minChildWidth="350px">
         {data.venues?.map((venue: VenueProps) => (
-          <VenueItem key={venue.id.toString()} venue={venue} />
+          <VenueItem key={venue.id.toString()} venue={venue} favorites={favorites} toggleFavorite={toggleFavorite} />
         ))}
-      </SimpleGrid>
+      </SimpleGrid>   
     </>
   );
 };
 
-const VenueItem: React.FC<VenuItemProps> = ({ venue }) => (
+const VenueItem: React.FC<VenueItemProps & { favorites: VenueProps[]; toggleFavorite: (venue: VenueProps) => void; }> = ({ venue, favorites, toggleFavorite }) => (
   <LinkBox>
     <Box        
       p={[4, 6]}
@@ -66,6 +69,14 @@ const VenueItem: React.FC<VenuItemProps> = ({ venue }) => (
         </LinkOverlay>
       </Heading>
       <Text fontSize="sm" color="gray.500">{venue.display_location}</Text>
+      <IconButton
+        icon={<StarIcon />}
+        aria-label="Add to favorites"
+        onClick={() => toggleFavorite(venue)}
+        colorScheme={favorites.some(fav => fav.id === venue.id) ? 'yellow' : 'gray'}
+        size="sm"
+        mt={2}
+      />
     </Box>
   </LinkBox>
 );

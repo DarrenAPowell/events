@@ -11,13 +11,16 @@ import {
   Stack,
   Image,
   LinkBox,
-  LinkOverlay 
+  LinkOverlay ,
+  IconButton
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
+import { StarIcon } from '@chakra-ui/icons';
 import Breadcrumbs from './Breadcrumbs';
 import Error from './Error';
 import { useSeatGeek } from '../utils/useSeatGeek';
 import { formatDateTime } from '../utils/formatDateTime';
+import useFavorites from '../utils/useFavorites';
 
 export interface Performers {
   image: string;
@@ -47,6 +50,9 @@ const Events: React.FC = () => {
     per_page: '24',
   });
 
+  const { favorites, toggleFavorite } = useFavorites();
+
+
   if (error) return <Error />;
 
   if (!data) {
@@ -62,14 +68,14 @@ const Events: React.FC = () => {
       <Breadcrumbs items={[{ label: 'Home', to: '/' }, { label: 'Events' }]} />
       <SimpleGrid spacing="6" m="6" minChildWidth="350px">
         {data.events?.map((event: EventProps) => (
-          <EventItem key={event.id.toString()} event={event} />
+          <EventItem key={event.id.toString()} event={event} favorites={favorites} toggleFavorite={toggleFavorite} />
         ))}
       </SimpleGrid>
     </>
   );
 };
 
-const EventItem: React.FC<EventItemProps> = ({ event }) => (
+const EventItem: React.FC<EventItemProps & { favorites: EventProps[]; toggleFavorite: (event: EventProps) => void; }> = ({ event, favorites, toggleFavorite }) => (
   <LinkBox 
     as={Card} 
     variant="outline"
@@ -84,6 +90,16 @@ const EventItem: React.FC<EventItemProps> = ({ event }) => (
         <Heading size="md">
           <LinkOverlay as={Link} to={`/events/${event.id}`}>{event.short_title}</LinkOverlay>
         </Heading>
+        <Box alignSelf="flex-start">
+          <IconButton
+            icon={<StarIcon />}
+            aria-label="Add to favorites"
+            onClick={() => toggleFavorite(event)}
+            colorScheme={favorites.some(fav => fav.id === event.id) ? 'yellow' : 'gray'}
+            size="sm"
+            mt={2}
+          />
+        </Box>
         <Box>
           <Text fontSize="sm" color="gray.600">
             {event.venue.name_v2}
