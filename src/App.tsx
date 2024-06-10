@@ -8,11 +8,9 @@ import Event from './components/Event';
 import { Flex, Heading } from '@chakra-ui/react';
 import {  Button} from '@chakra-ui/react';
 import { StarIcon } from '@chakra-ui/icons';
-import useFavorites from './utils/useFavorites';
 import FavoriteDrawer from "./components/favoriteDrawer"
 
 const App: React.FC = () => {
-  const { favorites, toggleFavorite } = useFavorites(); 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const toggleDrawer = () => {
@@ -32,7 +30,7 @@ const App: React.FC = () => {
         </Button>
       </Flex>
 
-      <FavoriteDrawer isOpen={isDrawerOpen} onClose={handleCloseDrawer} favorites={favorites} />
+      <FavoriteDrawer isOpen={isDrawerOpen} onClose={handleCloseDrawer} />
 
       <Routes>
         <Route path="/" Component={Home} />

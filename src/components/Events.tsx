@@ -21,6 +21,7 @@ import Error from './Error';
 import { useSeatGeek } from '../utils/useSeatGeek';
 import { formatDateTime } from '../utils/formatDateTime';
 import useFavorites from '../utils/useFavorites';
+import { Item } from '../utils/useFavorites';
 
 export interface Performers {
   image: string;
@@ -63,11 +64,19 @@ const Events: React.FC = () => {
     )
   }
 
+  const events: EventProps[] = data.events.map((event: any) => ({
+    id: event.id,
+    short_title: event.short_title,
+    datetime_utc: new Date(event.datetime_utc),
+    performers: event.performers,
+    venue: event.venue,
+  }));
+
   return (
     <>
       <Breadcrumbs items={[{ label: 'Home', to: '/' }, { label: 'Events' }]} />
       <SimpleGrid spacing="6" m="6" minChildWidth="350px">
-        {data.events?.map((event: EventProps) => (
+      {events.map((event: EventProps) => (
           <EventItem key={event.id.toString()} event={event} favorites={favorites} toggleFavorite={toggleFavorite} />
         ))}
       </SimpleGrid>
@@ -75,7 +84,7 @@ const Events: React.FC = () => {
   );
 };
 
-const EventItem: React.FC<EventItemProps & { favorites: EventProps[]; toggleFavorite: (event: EventProps) => void; }> = ({ event, favorites, toggleFavorite }) => (
+const EventItem: React.FC<EventItemProps & { favorites: Item[]|EventProps[]; toggleFavorite: (event: Item|EventProps) => void; }> = ({ event, favorites, toggleFavorite }) => (
   <LinkBox 
     as={Card} 
     variant="outline"
@@ -95,7 +104,7 @@ const EventItem: React.FC<EventItemProps & { favorites: EventProps[]; toggleFavo
             icon={<StarIcon />}
             aria-label="Add to favorites"
             onClick={() => toggleFavorite(event)}
-            colorScheme={favorites.some(fav => fav.id === event.id) ? 'yellow' : 'gray'}
+            colorScheme={favorites.some((fav: { id: string; }) => fav.id === event.id) ? 'yellow' : 'gray'}
             size="sm"
             mt={2}
           />

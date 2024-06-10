@@ -4,6 +4,7 @@ import { Link as BrowserLink } from 'react-router-dom';
 import { useSeatGeek } from '../utils/useSeatGeek';
 import Error from './Error';
 import Breadcrumbs from './Breadcrumbs';
+import { Item } from '../utils/useFavorites';
 import useFavorites from '../utils/useFavorites';
 import { StarIcon } from '@chakra-ui/icons';
 
@@ -36,19 +37,27 @@ const Venues: React.FC = () => {
     )
   }
 
+  const venues: VenueProps[] = data.venues.map((venue: any) => ({
+    id: venue.id,
+    has_upcoming_events: venue.has_upcoming_events,
+    num_upcoming_events: venue.num_upcoming_events,
+    name: venue.name_v2,
+    display_location: venue.display_location,
+  }));
+
   return (
     <>
       <Breadcrumbs items={[{ label: 'Home', to: '/' }, { label: 'Venues' }]} />
       <SimpleGrid spacing="6" m="6" minChildWidth="350px">
-        {data.venues?.map((venue: VenueProps) => (
-          <VenueItem key={venue.id.toString()} venue={venue} favorites={favorites} toggleFavorite={toggleFavorite} />
+      {venues.map((venue: VenueProps) => (
+          <VenueItem key={venue.id.toString()} venue={venue} favorites={favorites} toggleFavorite={(venue: Item | VenueProps) => toggleFavorite( venue as Item) } />
         ))}
       </SimpleGrid>   
     </>
   );
 };
 
-const VenueItem: React.FC<VenueItemProps & { favorites: VenueProps[]; toggleFavorite: (venue: VenueProps) => void; }> = ({ venue, favorites, toggleFavorite }) => (
+const VenueItem: React.FC<VenueItemProps & { favorites: Item[]|VenueProps[]; toggleFavorite: (event: Item|VenueProps) => void; } > = ( { venue, favorites, toggleFavorite }) => (
   <LinkBox>
     <Box        
       p={[4, 6]}
