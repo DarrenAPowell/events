@@ -12,7 +12,7 @@ export interface VenueProps {
   id: number;
   has_upcoming_events: boolean;
   num_upcoming_events: number;
-  name_v2: string;
+  name: string;
   display_location: string;
 }
 
@@ -41,7 +41,7 @@ const Venues: React.FC = () => {
     id: venue.id,
     has_upcoming_events: venue.has_upcoming_events,
     num_upcoming_events: venue.num_upcoming_events,
-    name: venue.name_v2,
+    name: venue.name,
     display_location: venue.display_location,
   }));
 
