@@ -74,7 +74,7 @@ const VenueItem: React.FC<VenueItemProps & { favorites: Item[]|VenueProps[]; tog
       </Badge>
       <Heading size='sm' noOfLines={1}>
         <LinkOverlay as={BrowserLink} to={`/venues/${venue.id}`}>
-          {venue.name_v2}
+         {venue.name } 
         </LinkOverlay>
       </Heading>
       <Text fontSize="sm" color="gray.500">{venue.display_location}</Text>
