@@ -41,7 +41,7 @@ const Venues: React.FC = () => {
     id: venue.id,
     has_upcoming_events: venue.has_upcoming_events,
     num_upcoming_events: venue.num_upcoming_events,
-    name: venue.name,
+    name: venue.name_v2,
     display_location: venue.display_location,
   }));
 
@@ -74,7 +74,7 @@ const VenueItem: React.FC<VenueItemProps & { favorites: Item[]|VenueProps[]; tog
       </Badge>
       <Heading size='sm' noOfLines={1}>
         <LinkOverlay as={BrowserLink} to={`/venues/${venue.id}`}>
-         {venue.name } 
+        {venue.name_v2} ||  {venue.name } 
         </LinkOverlay>
       </Heading>
       <Text fontSize="sm" color="gray.500">{venue.display_location}</Text>
