@@ -24,7 +24,7 @@ const App: React.FC = () => {
   return (
     <Router>
       <Flex as="nav" bg="gray.700" color="white" padding="24px" alignItems="center" justifyContent="space-between" position="sticky" top="0" zIndex="1000">
-        <Heading size="md">Ascential Front End Challenge</Heading>
+        <Heading size="md">home</Heading>
         <Button onClick={toggleDrawer} leftIcon={<StarIcon color="yellow.400" />}>
            Favorites
         </Button>
